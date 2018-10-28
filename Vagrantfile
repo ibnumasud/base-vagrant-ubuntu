@@ -8,10 +8,12 @@
 Vagrant.configure("2") do |config|
   config.vm.define "base" do |base|
 
-  base.vm.box = "ubuntu/xenial64"
+  base.vm.box = "bento/ubuntu-16.04"
   base.vm.hostname = "base"
   base.vm.synced_folder '.', '/vagrant', disabled: true
-  base.vm.network :private_network, ip: "192.168.202.201"
+  base.vm.network :private_network, ip: "192.168.203.201"
+  
+  
   base.vm.provider "virtualbox" do |vb|
     unless File.exist?('./secondDisk.vdi')
       vb.customize ['createhd', '--filename', './secondDisk.vdi', '--variant', 'Fixed', '--size', 2 * 1024]
@@ -20,8 +22,8 @@ Vagrant.configure("2") do |config|
       vb.customize ['createhd', '--filename', './thirdDisk.vdi', '--variant', 'Fixed', '--size', 2 * 1024]
     end
     vb.memory = "1024"
-    vb.customize ['storageattach', :id,  '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', './secondDisk.vdi']
-    vb.customize ['storageattach', :id,  '--storagectl', 'SATA', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', './thirdDisk.vdi']
+    vb.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', './secondDisk.vdi']
+    vb.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', './thirdDisk.vdi']
   end
   # base.vm.provision :shell, path: "provision.sh", keep_color: "true"
 end
